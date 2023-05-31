@@ -2,7 +2,7 @@ import Card from 'react-bootstrap/Card';
 function NewsCard() {
     return (
         <Card>
-            <Card.Img variant="top" src="https://picsum.photos/100/50" />
+            <Card.Img variant="top" src="pholder.js/100px160" />
             <Card.Body>
                 <Card.Title>Card title</Card.Title>
                 <Card.Text>
