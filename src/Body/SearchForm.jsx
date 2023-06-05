@@ -54,10 +54,32 @@ const handleResultTypeChange=(event)=>{
     setArticlesSortDisabled(false);
   }
 }
+const languages=[
+  'Eesti',
+  'English',
+  'Русский',
+  'Suomalainen',
+  'Svenska',
+  'Latviešu',
+  'Lietuviškas',
+  'Беларуский',
+  'Polski',
+  'Deutsch',
+]
 
   return (
   
     <Form onSubmit={HandleSubmit}>
+      
+      <Form.Group className="mb-3">
+        <Form.Label>Languages</Form.Label>
+        <Form.Select name='languages'>
+        {languages.map(type =>(
+          <option value={type} key={type}> {type}</option>
+        ))}
+        </Form.Select>
+      </Form.Group>
+
       <Form.Group>
         <Form.Label>Keywords</Form.Label>
         <Form.Control type="text" name='keyword' />
@@ -91,6 +113,13 @@ const handleResultTypeChange=(event)=>{
             value={type}/>
           ))}
       </Form.Group>
+
+      <Form.Group>
+        <Form.Label>Date</Form.Label>
+        <Form.Control type="date" name='date of' />
+        <Form.Control type="date" name='date to' />
+      </Form.Group>
+      <Form.Group className="mb-3"></Form.Group>
     
       <Button variant="outline-dark" type='sybmit' >Close side bar</Button>
     </Form>
