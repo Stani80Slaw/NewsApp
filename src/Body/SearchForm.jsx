@@ -1,9 +1,11 @@
 import { useState } from "react";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
+import { getArticles } from "../services/apiServise";
 
-function SearchForm({ closeSideBar }) {
+function SearchForm({ closeSideBar, submitedData, setSubmitedData }) {
   const [articlesSortDisabled, setArticlesSortDisabled] = useState(false);
+
   const resultType = [
     "articles",
     "uriWgtList",
@@ -21,6 +23,7 @@ function SearchForm({ closeSideBar }) {
     "sentimentAggr",
     "recentActivityArticles",
   ];
+
   const articlesSortBy = [
     "date",
     "rel",
@@ -31,7 +34,22 @@ function SearchForm({ closeSideBar }) {
     "facebookShares",
   ];
   const dataType = ["news", "pr", "block"];
-  const HandleSubmit = (event) => {
+
+  const languages = [
+    { label: "Eesti", value: "est" },
+    { label: "English", value: "eng" },
+    { label: "Русский", value: "rus" },
+    { label: "Polski", value: "pol" },
+    { label: "Suomalainen", value: "fin" },
+    { label: "Svenska", value: "swe" },
+    { label: "Latviešu", value: "lav" },
+    { label: "Lietuviškas", value: "lit" },
+    { label: "Беларуский", value: "bel" },
+    { label: "Deutsch", value: "deu" },
+    { label: "Украiнский", value: "ukr" },
+  ];
+
+  const handleSubmit = (event) => {
     event.preventDefault();
 
     const data = {
@@ -41,13 +59,22 @@ function SearchForm({ closeSideBar }) {
       dataType: [...event.target.dataType]
         .filter((e) => e.checked)
         .map((d) => d.value),
-      lang: [...event.target.lang].filter((e) => e.selected).map((d) => d.value),
+      lang: [...event.target.lang]
+        .filter((e) => e.selected)
+        .map((d) => d.value),
       dateStart: event.target.dateStart.value,
       dateEnd: event.target.dateEnd.value,
     };
+
+    setSubmitedData(data);
+
     console.log("data", data);
+
+    getArticles(data).then((res) => console.log("res", res));
+
     closeSideBar();
   };
+
   const handleResultTypeChange = (event) => {
     if (event.target.value !== "articles") {
       setArticlesSortDisabled(true);
@@ -55,61 +82,48 @@ function SearchForm({ closeSideBar }) {
       setArticlesSortDisabled(false);
     }
   };
-  const lang = [
-    { label: "Eesti", value: "est" },
-    { label: "English", value: "eng" },
-    { label: "Русский", value: "rus" },
-    // {title:'Suomalainen',code:'fi'},
-    // {title:'Svenska',code:'sv'},
-    // {title:'Latviešu',code:'fi'},
-    // {title:'Lietuviškas',code:'fi'},
-    // {title:'Беларуский',code:'be'},
-    // {title:'Polski',code:'pl'},
-    // {title:'Deutsch',code:'de'},
-  ];
 
   return (
-    <Form onSubmit={HandleSubmit}>
-      {/* <Form.Group className="mb-3">
-        <Form.Label>Languages</Form.Label>
-        <Form.Select name="Lang">
-          {lang.map((type) => (
-            <option value={type.code} key={type.code}>
-              {" "}
-              {type.title}
-            </option>
-          ))}
-        </Form.Select>
-      </Form.Group> */}
-
+    <Form onSubmit={handleSubmit}>
       <Form.Group>
         <Form.Label>Keywords</Form.Label>
-        <Form.Control type="text" name="keyword" />
+        <Form.Control
+          type="text"
+          name="keyword"
+          defaultValue={submitedData?.keyword}
+        />
       </Form.Group>
+
       <Form.Group className="mb-3">
         <Form.Label>result Type</Form.Label>
-
-        <Form.Select name="resultType" onChange={handleResultTypeChange}>
+        <Form.Select
+          name="resultType"
+          onChange={handleResultTypeChange}
+          defaultValue={submitedData?.resultType}
+        >
           {resultType.map((type) => (
             <option value={type} key={type}>
-              {" "}
               {type}
             </option>
           ))}
         </Form.Select>
       </Form.Group>
-      <Form.Group className="mb-3">
-        <Form.Label>ArticlesSortBy</Form.Label>
 
-        <Form.Select name="articlesSortBy" disabled={articlesSortDisabled}>
+      <Form.Group className="mb-3">
+        <Form.Label>Articles Sort by</Form.Label>
+        <Form.Select
+          name="articlesSortBy"
+          disabled={articlesSortDisabled}
+          defaultValue={submitedData?.articlesSortBy}
+        >
           {articlesSortBy.map((type) => (
             <option value={type} key={type}>
-              {" "}
               {type}
             </option>
           ))}
         </Form.Select>
       </Form.Group>
+
       <Form.Group className="mb-3">
         <Form.Label>Data Type</Form.Label>
         {dataType.map((type) => (
@@ -119,21 +133,15 @@ function SearchForm({ closeSideBar }) {
             key={type}
             name="dataType"
             value={type}
+            defaultChecked={submitedData?.dataType.includes(type)}
           />
         ))}
       </Form.Group>
 
-      <Form.Group>
-        <Form.Label>Date</Form.Label>
-        <Form.Control type="date" name="dateStart" />
-        <Form.Control type="date" name="dateEnd" />
-      </Form.Group>
-      <Form.Group className="mb-3"></Form.Group>
-
-      <Form.Group className="mb=3">
+      <Form.Group className="mb-3">
         <Form.Label>Languages</Form.Label>
-        <Form.Select name="lang" multiple>
-          {lang.map(({ value, label }) => (
+        <Form.Select name="lang" multiple defaultValue={submitedData?.lang}>
+          {languages.map(({ value, label }) => (
             <option value={value} key={value}>
               {label}
             </option>
@@ -141,8 +149,26 @@ function SearchForm({ closeSideBar }) {
         </Form.Select>
       </Form.Group>
 
-      <Button variant="outline-dark" type="sybmit">
-        Close side bar
+      <Form.Group className="mb-3">
+        <Form.Label>Date start</Form.Label>
+        <Form.Control
+          type="date"
+          name="dateStart"
+          defaultValue={submitedData?.dateStart}
+        />
+      </Form.Group>
+
+      <Form.Group className="mb-3">
+        <Form.Label>Date end</Form.Label>
+        <Form.Control
+          type="date"
+          name="dateEnd"
+          defaultValue={submitedData?.dateEnd}
+        />
+      </Form.Group>
+
+      <Button variant="outline-dark" type="sybmit" className="w-100">
+        Search
       </Button>
     </Form>
   );
