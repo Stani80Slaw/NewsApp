@@ -3,7 +3,7 @@ import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import { getArticles } from "../services/apiServise";
 
-function SearchForm({ closeSideBar, submitedData, setSubmitedData }) {
+function SearchForm({ closeSideBar, submitedData, setSubmitedData , handleResrore}) {
   const [articlesSortDisabled, setArticlesSortDisabled] = useState(false);
 
   const resultType = [
@@ -169,6 +169,10 @@ function SearchForm({ closeSideBar, submitedData, setSubmitedData }) {
 
       <Button variant="outline-dark" type="sybmit" className="w-100">
         Search
+      </Button>
+
+      <Button variant="Light"  className="w-100 mb-3" onClick={handleResrore}>
+        Restore
       </Button>
     </Form>
   );
