@@ -1,20 +1,35 @@
+import { useState } from 'react';
 import Card from 'react-bootstrap/Card';
-function NewsCard() {
+import NewsModal from './NewsModal';
+import moment from "moment";
+function NewsCard({news}) {
+
+
+    const [showModal, setshowModal]= useState(false);
+
+    const handleClose = ()=> setshowModal(false);
+
+    const noImageUri ='https://t4.ftcdn.net/jpg/04/73/25/49/360_F_473254957_bxG9yf4ly7OBO5I0O5KABlN930GwaMQz.jpg';
     return (
-        <Card>
-            <Card.Img variant="top" src="pholder.js/100px160" />
+        <>
+        <Card onClick={()=> setshowModal(true)}>
+            <Card.Img variant="top" src={news.image || noImageUri} />
             <Card.Body>
-                <Card.Title>Card title</Card.Title>
+                <Card.Title>{news.title}</Card.Title>
                 <Card.Text>
-                    This is a longer card with supporting text below as a natural
-                    lead-in to additional content. This content is a little bit
-                    longer.
+                    {news.authors.map((author,idx) => (
+                        <span key={idx}> 
+                        <b>Auther Name: </b> {author.name} <br />;
+                        </span>
+                    ))}
                 </Card.Text>
             </Card.Body>
             <Card.Footer>
-                <small className="text-muted">Last updated 3 mins ago</small>
+                <small className="text-muted">{moment(news.dateTime).format("DD.MM.YYYY HH:mm:ss")}</small>
             </Card.Footer>
         </Card>
+        {showModal && <NewsModal news= {news} handleClose={handleClose}/>}
+        </>
     );
 }
 export default NewsCard;
