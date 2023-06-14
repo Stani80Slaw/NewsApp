@@ -10,6 +10,7 @@ function SearchForm({
   setSubmitedData,
   handleRestore,
   setNewsList,
+  setInfo,
 }) {
   const [articlesSortDisabled, setArticlesSortDisabled] = useState(false);
   const [errorMessage, setErrorMessage] = useState(null);
@@ -79,10 +80,11 @@ function SearchForm({
     console.log("data", data);
 
     getArticles(data)
-      .then((res) => {
-        closeSideBar();
-        setNewsList(res.articles.results);
-      })
+    .then(({ articles, info }) => {
+      articles && setNewsList(articles.results);
+      info ? setInfo(info) : setInfo(null);
+      closeSideBar();
+    })  
       .catch((error) => setErrorMessage(error.toString()));
   };
 
