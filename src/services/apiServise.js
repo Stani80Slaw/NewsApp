@@ -11,14 +11,13 @@ export const defaultData = {
     dataType: "news",
     lang: 'eng',
     dateStart: moment().subtract().format('YYYY-MM-DD'),
+    articlesCount: 12,
     };
-
-
-
-export async function getArticles(params = null){
+    
+export async function getArticles(params = {}){
 
     
-    const urlParams = new URLSearchParams({...(params || defaultData), apiKey});
+    const urlParams = new URLSearchParams({...defaultData, ...params, apiKey});
     
     const response = await fetch(`${apiUrl}/article/getArticles?${urlParams}`);
 
@@ -33,5 +32,4 @@ export async function getArticles(params = null){
     }
 
     return data;
-   
 };
