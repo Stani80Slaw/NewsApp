@@ -7,7 +7,7 @@ const apiKey= process.env.REACT_APP_API_KEY;
 export const defaultData = {
     keyword: "Elon Musk",
     resultType: "articles",
-    articlesSortBy: "data",
+    articlesSortBy: "date",
     dataType: "news",
     lang: 'eng',
     dateStart: moment().subtract().format('YYYY-MM-DD'),

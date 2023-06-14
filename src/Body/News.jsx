@@ -5,8 +5,8 @@ import NewsCard from "./NewsCard";
 import { getArticles } from "../services/apiServise";
 import ErrorModal from "../ErrorModal";
 
-function News() {
-  const [newsList, setNewsList] = useState(null);
+function News({newsList,  setNewsList}) {
+  
   const [errorMessage, setErrorMessage] = useState(null);
 
   useEffect(() => {
