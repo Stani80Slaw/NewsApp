@@ -1,18 +1,37 @@
-
-import Col from 'react-bootstrap/Col';
-import Row from 'react-bootstrap/Row';
-import NewsCard from './NewsCard';
+import { useEffect, useState } from "react";
+import Col from "react-bootstrap/Col";
+import Row from "react-bootstrap/Row";
+import NewsCard from "./NewsCard";
+import { getArticles } from "../services/apiServise";
+import ErrorModal from "../ErrorModal";
 
 function News() {
-    return (
-        <Row xs={1} md={2} lg={3} className="g-4">
-            {Array.from({ length: 4 }).map((_, idx) => (
-                <Col key={idx}>
-                    <NewsCard/>
-                </Col>
-            ))}
-        </Row>
-    );
+  const [newsList, setNewsList] = useState(null);
+  const [errorMessage, setErrorMessage] = useState(null);
+
+  useEffect(() => {
+    getArticles()
+      .then((data) => {
+        setNewsList(data.articles.results);
+      })
+      .catch((error) => setErrorMessage(error.toString()));
+  }, []);
+
+  return (
+    <>
+      <Row xs={1} md={2} lg={3} className="g-4">
+        {newsList?.map((news, idx) => (
+          <Col key={idx}>
+            <NewsCard news={news} />
+          </Col>
+        ))}
+      </Row>
+      <ErrorModal
+        errorMessage={errorMessage}
+        handleClose={() => setErrorMessage(null)}
+      />
+    </>
+  );
 }
 
 export default News;
