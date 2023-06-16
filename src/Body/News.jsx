@@ -28,6 +28,7 @@ function News({ newsList, setNewsList, setInfo, info }) {
           dataLength={newsList?.length}
           next={() => setPage(page + 1)}
           hasMore
+          scrollThreshold="100%"
           loader={<h4>Loading...</h4>}
           endMessage={
             <p style={{ textAlign: "center" }}>

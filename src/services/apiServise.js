@@ -12,6 +12,8 @@ export const defaultData = {
     lang: 'eng',
     dateStart: moment().subtract().format('YYYY-MM-DD'),
     articlesCount: 12,
+    isDuplicateFilter: 'skipDuplicates',
+    hasDuplicateFilter: 'skipDuplicates',
     };
     
 export async function getArticles(params = {}){
