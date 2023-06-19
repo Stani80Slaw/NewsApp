@@ -1,21 +1,22 @@
 import { useEffect, useState } from "react";
-import { getArticles } from "../services/apiServise";
+import { getEvents } from "../services/apiServise";
 import ErrorModal from "../ErrorModal";
 import { useParams } from "react-router-dom";
 import Datalist from "./DataList";
 
-function News({ dataList, setDataList, setInfo, info }) {
+function Events({ dataList, setDataList, setInfo, info }) {
   const [errorMessage, setErrorMessage] = useState(null);
   const [page, setPage] = useState(1);
+
   const { keyword } = useParams();
 
   useEffect(() => {
-    getArticles({
-      articlesPage: page,
+    getEvents({
+      eventsPage: page,
       ...(keyword ? { keyword } : {}),
     })
-      .then(({ articles, info }) => {
-        articles && setDataList([...(dataList || []), ...articles.results]);
+      .then(({ events, info }) => {
+        events && setDataList([...(dataList || []), ...events.results]);
         info ? setInfo(info) : setInfo(null);
       })
       .catch((error) => setErrorMessage(error.toString()));
@@ -24,6 +25,7 @@ function News({ dataList, setDataList, setInfo, info }) {
   return (
     <>
       <Datalist info={info} dataList={dataList} page={page} setPage={setPage} />
+
       <ErrorModal
         errorMessage={errorMessage}
         handleClose={() => setErrorMessage(null)}
@@ -32,4 +34,4 @@ function News({ dataList, setDataList, setInfo, info }) {
   );
 }
 
-export default News;
+export default Events;

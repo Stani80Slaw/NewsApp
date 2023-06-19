@@ -4,25 +4,8 @@ const apiUrl = 'http://eventregistry.org/api/v1';
 
 const apiKey= process.env.REACT_APP_API_KEY;
 
-export const defaultData = {
-    keyword: "Elon Musk",
-    resultType: "articles",
-    articlesSortBy: "date",
-    dataType: "news",
-    lang: 'eng',
-    dateStart: moment().subtract().format('YYYY-MM-DD'),
-    articlesCount: 12,
-    isDuplicateFilter: 'skipDuplicates',
-    hasDuplicateFilter: 'skipDuplicates',
-    };
-    
-export async function getArticles(params = {}){
-
-    
-    const urlParams = new URLSearchParams({...defaultData, ...params, apiKey});
-    
-    const response = await fetch(`${apiUrl}/article/getArticles?${urlParams}`);
-
+const handleResponse =async(get)=>{
+    const response =await get();
     if(!response.ok){
         throw new Error('Error in response, status code: '+response.status);
     }
@@ -32,6 +15,55 @@ export async function getArticles(params = {}){
     if(data.error){
         throw new Error('Api error: '+data.error);
     }
-
+ 
     return data;
+
+};
+
+export const defaultData = {
+    keyword: "Elon Musk",
+    resultType: "articles",
+    articlesSortBy: "date",
+    dataType: "news",
+    lang: 'eng',
+    dateStart: moment().subtract(1,'month').format('YYYY-MM-DD'),
+    articlesCount: 12,
+    isDuplicateFilter: 'skipDuplicates',
+    hasDuplicateFilter: 'skipDuplicates',
+    articlesCount: 12,
+    };
+
+export const defaultEvents ={
+    resultType: "events",
+    keyword: "Top",
+    articlesCount: 12,
+}
+
+const defaultCountAtricles={
+
+}
+
+
+    
+export async function getArticles(params = {}){
+    return handleResponse(()=>{
+        const urlParams = new URLSearchParams({...defaultData,   ...params, apiKey});
+    
+        return fetch(`${apiUrl}/article/getArticles?${urlParams}`);
+
+    })
+    
+    
+
+    
+};
+
+export async function getEvents(params = {}){
+
+    return handleResponse(()=>{
+        const urlParams = new URLSearchParams({...defaultEvents,  ...params, apiKey});
+    
+        return fetch(`${apiUrl}/event/getEvents?${urlParams}`);
+
+    });
 };

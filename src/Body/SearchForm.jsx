@@ -9,7 +9,7 @@ function SearchForm({
   submitedData,
   setSubmitedData,
   handleRestore,
-  setNewsList,
+  setDataList,
   setInfo,
 }) {
   const [articlesSortDisabled, setArticlesSortDisabled] = useState(false);
@@ -65,12 +65,8 @@ function SearchForm({
       keyword: event.target.keyword.value,
       resultType: event.target.resultType.value,
       articlesSortBy: event.target.articlesSortBy.value,
-      dataType: [...event.target.dataType]
-        .filter((e) => e.checked)
-        .map((d) => d.value),
-      lang: [...event.target.lang]
-        .filter((e) => e.selected)
-        .map((d) => d.value),
+      dataType: [event.target.dataType.value],
+      lang: [event.target.lang.value],
       dateStart: event.target.dateStart.value,
       dateEnd: event.target.dateEnd.value,
     };
@@ -80,11 +76,11 @@ function SearchForm({
     console.log("data", data);
 
     getArticles(data)
-    .then(({ articles, info }) => {
-      articles && setNewsList(articles.results);
-      info ? setInfo(info) : setInfo(null);
-      closeSideBar();
-    })  
+      .then(({ articles, info }) => {
+        articles && setDataList(articles.results);
+        info ? setInfo(info) : setInfo(null);
+        closeSideBar();
+      })
       .catch((error) => setErrorMessage(error.toString()));
   };
 
@@ -142,7 +138,7 @@ function SearchForm({
           <Form.Label>Data Type</Form.Label>
           {dataType.map((type) => (
             <Form.Check
-              type="checkbox"
+              type="radio"
               label={type}
               key={type}
               name="dataType"
@@ -154,7 +150,7 @@ function SearchForm({
 
         <Form.Group className="mb-3">
           <Form.Label>Languages</Form.Label>
-          <Form.Select name="lang" multiple defaultValue={submitedData?.lang}>
+          <Form.Select name="lang" defaultValue={submitedData?.lang}>
             {languages.map(({ value, label }) => (
               <option value={value} key={value}>
                 {label}

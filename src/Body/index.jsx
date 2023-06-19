@@ -1,17 +1,62 @@
 import News from "./News";
 import SideBar from "./SideBar";
 import { useState } from "react";
+import { Route, Routes } from "react-router-dom";
+import Events from "./Events";
 function Body() {
-  const [newsList, setNewsList] = useState(null);
-  const[info, setInfo]=useState(null); 
+  const [dataList, setDataList] = useState(null);
+  const [info, setInfo] = useState(null);
+
   return (
     <>
-      <SideBar setNewsList={setNewsList} 
-      setInfo={setInfo}/>
-      <News newsList={newsList} 
-      setNewsList={setNewsList} 
-      info={info}
-      setInfo={setInfo}/>
+      <SideBar setDataList={setDataList} setInfo={setInfo} />
+
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <News
+              dataList={dataList}
+              setDataList={setDataList}
+              info={info}
+              setInfo={setInfo}
+            />
+          }
+        />
+        <Route
+          path="/:keyword"
+          element={
+            <News
+              dataList={dataList}
+              setDataList={setDataList}
+              info={info}
+              setInfo={setInfo}
+            />
+          }
+        />
+        <Route
+          path="/events"
+          element={
+            <Events
+              dataList={dataList}
+              setDataList={setDataList}
+              info={info}
+              setInfo={setInfo}
+            />
+          }
+        />
+        <Route
+          path="/events/:keyword"
+          element={
+            <Events
+              dataList={dataList}
+              setDataList={setDataList}
+              info={info}
+              setInfo={setInfo}
+            />
+          }
+        />
+      </Routes>
     </>
   );
 }
