@@ -1,4 +1,3 @@
-import { useState } from "react";
 import Alert from "react-bootstrap/Alert";
 import InfiniteScroll from "react-infinite-scroll-component";
 import Col from "react-bootstrap/Col";

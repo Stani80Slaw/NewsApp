@@ -12,6 +12,7 @@ function Events({ dataList, setDataList, setInfo, info }) {
 
   useEffect(() => {
     getEvents({
+      resultType: "events",
       eventsPage: page,
       ...(keyword ? { keyword } : {}),
     })

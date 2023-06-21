@@ -30,7 +30,6 @@ export const defaultData = {
     articlesCount: 12,
     isDuplicateFilter: 'skipDuplicates',
     hasDuplicateFilter: 'skipDuplicates',
-    articlesCount: 12,
     };
 
 export const defaultEvents ={
@@ -39,12 +38,6 @@ export const defaultEvents ={
     articlesCount: 12,
 }
 
-const defaultCountAtricles={
-
-}
-
-
-    
 export async function getArticles(params = {}){
     return handleResponse(()=>{
         const urlParams = new URLSearchParams({...defaultData,   ...params, apiKey});
