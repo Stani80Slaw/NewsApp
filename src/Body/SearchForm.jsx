@@ -1,19 +1,14 @@
 import { useState } from "react";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
-import { getArticles } from "../services/apiServise";
-import ErrorModal from "../ErrorModal";
+import { setSearchData, setDataList } from "../services/stateServise";
+import { useDispatch, useSelector } from "react-redux";
+import { defaultData } from "../services/apiServise";
 
-function SearchForm({
-  closeSideBar,
-  submitedData,
-  setSubmitedData,
-  handleRestore,
-  setDataList,
-  setInfo,
-}) {
+function SearchForm({ closeSideBar }) {
+  const dispatch = useDispatch();
+  const searchData = useSelector((state) => state.searchData);
   const [articlesSortDisabled, setArticlesSortDisabled] = useState(false);
-  const [errorMessage, setErrorMessage] = useState(null);
 
   const resultType = [
     "articles",
@@ -71,17 +66,9 @@ function SearchForm({
       dateEnd: event.target.dateEnd.value,
     };
 
-    setSubmitedData(data);
-
-    console.log("data", data);
-
-    getArticles(data)
-      .then(({ articles, info }) => {
-        articles && setDataList(articles.results);
-        info ? setInfo(info) : setInfo(null);
-        closeSideBar();
-      })
-      .catch((error) => setErrorMessage(error.toString()));
+    dispatch(setSearchData(data));
+    dispatch(setDataList(null));
+    closeSideBar();
   };
 
   const handleResultTypeChange = (event) => {
@@ -92,6 +79,10 @@ function SearchForm({
     }
   };
 
+  const handleRestore = () => {
+    dispatch(setSearchData({}));
+    closeSideBar();
+  };
   return (
     <>
       <Form onSubmit={handleSubmit}>
@@ -100,7 +91,7 @@ function SearchForm({
           <Form.Control
             type="text"
             name="keyword"
-            defaultValue={submitedData?.keyword}
+            defaultValue={searchData?.keyword || defaultData.keyword}
           />
         </Form.Group>
 
@@ -109,7 +100,7 @@ function SearchForm({
           <Form.Select
             name="resultType"
             onChange={handleResultTypeChange}
-            defaultValue={submitedData?.resultType}
+            defaultValue={searchData?.resultType || defaultData.resultType}
           >
             {resultType.map((type) => (
               <option value={type} key={type}>
@@ -124,7 +115,8 @@ function SearchForm({
           <Form.Select
             name="articlesSortBy"
             disabled={articlesSortDisabled}
-            defaultValue={submitedData?.articlesSortBy}
+            defaultValue={
+              searchData?.articlesSortBy || defaultData.articlesSortBy}
           >
             {articlesSortBy.map((type) => (
               <option value={type} key={type}>
@@ -143,14 +135,18 @@ function SearchForm({
               key={type}
               name="dataType"
               value={type}
-              defaultChecked={submitedData?.dataType.includes(type)}
+              defaultChecked={
+                searchData.dataType?.includes(type) ||  defaultData.dataType?.includes(type)}
             />
           ))}
         </Form.Group>
 
         <Form.Group className="mb-3">
           <Form.Label>Languages</Form.Label>
-          <Form.Select name="lang" defaultValue={submitedData?.lang}>
+          <Form.Select
+            name="lang"
+            defaultValue={searchData?.lang || defaultData.lang}
+          >
             {languages.map(({ value, label }) => (
               <option value={value} key={value}>
                 {label}
@@ -164,7 +160,7 @@ function SearchForm({
           <Form.Control
             type="date"
             name="dateStart"
-            defaultValue={submitedData?.dateStart}
+            defaultValue={searchData?.dateStart || defaultData.dateStart}
           />
         </Form.Group>
 
@@ -173,7 +169,7 @@ function SearchForm({
           <Form.Control
             type="date"
             name="dateEnd"
-            defaultValue={submitedData?.dateEnd}
+            defaultValue={searchData?.dateEnd || defaultData.dateEnd}
           />
         </Form.Group>
 
@@ -185,10 +181,6 @@ function SearchForm({
           Restore
         </Button>
       </Form>
-      <ErrorModal
-        errorMessage={errorMessage}
-        handleClose={() => setErrorMessage(null)}
-      />
     </>
   );
 }
