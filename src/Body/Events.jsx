@@ -7,7 +7,7 @@ import { setErrorMessage } from "../services/stateServise";
 
 function Events({ setInfo, info }) {
   const [page, setPage] = useState(1);
-  const [dataList, setDataList] = useState(null);
+  const [dataList, setDataList] = useState([]);
   const searchData = useSelector((state) => state.searchData);
   const { keyword } = useParams();
   const dispatch = useDispatch();
@@ -20,7 +20,8 @@ function Events({ setInfo, info }) {
       ...(keyword ? { keyword } : {}),
     })
       .then(({ events, info }) => {
-        events && setDataList(dataList ? [...dataList, ...events.results] : events.results);
+        events && 
+        setDataList((prevDataList) =>   [...prevDataList, ...events.results]);
         info ? setInfo(info) : setInfo(null);
       })
       .catch((error) => dispatch(setErrorMessage(error.toString())));
